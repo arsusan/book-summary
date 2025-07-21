@@ -1,6 +1,5 @@
 [build]
   publish = "public"
-  command = "echo 'No build needed'"
 
 [[redirects]]
   from = "/admin/*"
@@ -8,3 +7,7 @@
   status = 200
   force = true
 
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;"

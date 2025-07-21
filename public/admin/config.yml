@@ -1,62 +1,126 @@
 backend:
-name: git-gateway
-branch: main
-base_url: https://susanaryal.com.np/
+  name: git-gateway
+  branch: main
 
-media_folder: "assets/uploads"
+# This fixes the unsafe-eval error by allowing CMS to load without eval
+load_config_file: false
+
+media_folder: "public/assets/uploads"
 public_folder: "/assets/uploads"
 
 collections:
-- name: "books"
-label: "Books"
-folder: "content/books"
-create: false
-slug: "{{slug}}"
-format: "json"
-extension: "json"
-fields:
-- { label: "ID", name: "id", widget: "number" }
-- { label: "Title", name: "title", widget: "string" }
-- { label: "Author", name: "author", widget: "string" }
-- { label: "Description", name: "description", widget: "text" }
-- {
-label: "Category",
-name: "category",
-widget: "select",
-options:
-["business", "psychology", "self-help", "productivity", "other"],
-}
-- {
-label: "Cover Image",
-name: "cover",
-widget: "image",
-required: false,
-media_folder: "assets/covers",
-public_folder: "/assets/covers",
-}
-- label: "Chapters"
-name: "chapters"
-widget: "list"
-fields:
-- { label: "Chapter Title", name: "title", widget: "string" }
-- label: "Summary Type"
-name: "type"
-widget: "select"
-options:
-- { label: "Paragraph", value: "paragraph" }
-- { label: "Bullet Points", value: "bullets" }
-default: "paragraph"
-- label: "Paragraph Summary"
-name: "paragraph_content" # 🟢 changed from "content"
-widget: "markdown"
-required: false
-condition:
-when: "type"
-is: "paragraph"
-- label: "Bullet Points"
-name: "bullet_points" # 🟢 changed from "content"
-widget: "list"
-required: false
-condition:
-when: "type"
-is: "bullets"
+  - name: "books"
+    label: "Books"
+    files:
+      - name: "data"
+        label: "Books Data"
+        file: "content/books/data.json"
+        fields:
+          - name: "books"
+            label: "Books"
+            widget: "list"
+            fields:
+              - {
+                  label: "ID",
+                  name: "id",
+                  widget: "number",
+                  value_type: "int",
+                  hint: "Unique number for each book",
+                }
+              - {
+                  label: "Title",
+                  name: "title",
+                  widget: "string",
+                  pattern: ["^.{3,}$", "Minimum 3 characters required"],
+                }
+              - { label: "Author", name: "author", widget: "string" }
+              - {
+                  label: "Description",
+                  name: "description",
+                  widget: "textarea",
+                  min: 20,
+                }
+              - {
+                  label: "Category",
+                  name: "category",
+                  widget: "select",
+                  options:
+                    [
+                      "business",
+                      "psychology",
+                      "self-help",
+                      "productivity",
+                      "other",
+                    ],
+                  default: "other",
+                }
+              - {
+                  label: "Cover Image",
+                  name: "cover",
+                  widget: "image",
+                  media_folder: "public/assets/covers",
+                  public_folder: "/assets/covers",
+                  choose_url: false,
+                  required: false,
+                }
+              - label: "Additional Details"
+                name: "details"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - {
+                      label: "Publication Year",
+                      name: "year",
+                      widget: "number",
+                      min: 1900,
+                      max: 2100,
+                      required: false,
+                    }
+                  - {
+                      label: "Page Count",
+                      name: "pages",
+                      widget: "number",
+                      min: 1,
+                      required: false,
+                    }
+                  - {
+                      label: "Rating",
+                      name: "rating",
+                      widget: "number",
+                      min: 0,
+                      max: 5,
+                      step: 0.1,
+                      required: false,
+                    }
+              - label: "Chapters"
+                name: "chapters"
+                widget: "list"
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - {
+                      label: "Type",
+                      name: "type",
+                      widget: "select",
+                      options:
+                        [
+                          { label: "Paragraph", value: "paragraph" },
+                          { label: "Bullet Points", value: "bullets" },
+                        ],
+                      default: "paragraph",
+                    }
+                  - {
+                      label: "Content",
+                      name: "content",
+                      widget: "markdown",
+                      buttons: ["bold", "italic", "link"],
+                      editor_components: [],
+                      required: true,
+                    }
+                  - {
+                      label: "Key Quote",
+                      name: "key_quote",
+                      widget: "string",
+                      required: false,
+                      hint: "Optional notable quote from this chapter",
+                    }

@@ -4,14 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;">
     <title>Content Manager</title>
-    <!-- Load from CDN with integrity checks -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"
-        integrity="sha384-+9QyS5f8w+9O3d5FyJp4GZ4BQ5t+0V4y0X0C8t6U5Rl/5zl8s0Q5X5X5Y5Y5Y5Y5" crossorigin="anonymous">
-        </script>
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"
-        integrity="sha384-ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" crossorigin="anonymous">
-        </script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body>
