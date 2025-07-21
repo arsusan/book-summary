@@ -1,6 +1,7 @@
 backend:
   name: git-gateway
   branch: main
+  site_domain: https://susanaryal.com.np/
 
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"

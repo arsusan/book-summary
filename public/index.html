@@ -126,10 +126,15 @@
     </footer>
 
     <!-- Netlify Identity -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js">
+        if (window.location.pathname === '/admin/') {
+            window.location.href = '/admin/index.html';
+        }
+    </script>
 
     <!-- Main JavaScript -->
-    <script src="/js/app.js" type="module"></script>
+    <script src="/public/js/app.js" type="module"></script>
+
 </body>
 
 </html>
