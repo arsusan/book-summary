@@ -1,5 +1,5 @@
 [build]
-  publish = "."  # or the folder where index.html is
+  publish = "public"  # or the folder where index.html is
   command = ""
 
 [[redirects]]
