@@ -1,6 +1,6 @@
 [build]
-    command = "npm run build"
-    publish = "public"
+  publish = "public"
+  command = "echo 'No build needed'"
 
 [[redirects]]
   from = "/admin/*"
@@ -11,4 +11,6 @@
 [[headers]]
   for = "/admin/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self' https:; script-src 'self' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' https: data:;"
+    Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
