@@ -1,0 +1,63 @@
+backend:
+name: git-gateway
+repo: arsusan/book-summary
+branch: main
+base_url: https://ar-books.netlify.app/
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+- name: "books"
+label: "Books"
+folder: "content/books"
+create: false
+slug: "{{slug}}"
+format: "json"
+extension: "json"
+fields:
+- { label: "ID", name: "id", widget: "number" }
+- { label: "Title", name: "title", widget: "string" }
+- { label: "Author", name: "author", widget: "string" }
+- { label: "Description", name: "description", widget: "text" }
+- {
+label: "Category",
+name: "category",
+widget: "select",
+options:
+["business", "psychology", "self-help", "productivity", "other"],
+}
+- {
+label: "Cover Image",
+name: "cover",
+widget: "image",
+required: false,
+media_folder: "assets/covers",
+public_folder: "/assets/covers",
+}
+- label: "Chapters"
+name: "chapters"
+widget: "list"
+fields:
+- { label: "Chapter Title", name: "title", widget: "string" }
+- label: "Summary Type"
+name: "type"
+widget: "select"
+options:
+- { label: "Paragraph", value: "paragraph" }
+- { label: "Bullet Points", value: "bullets" }
+default: "paragraph"
+- label: "Paragraph Summary"
+name: "paragraph_content" # 🟢 changed from "content"
+widget: "markdown"
+required: false
+condition:
+when: "type"
+is: "paragraph"
+- label: "Bullet Points"
+name: "bullet_points" # 🟢 changed from "content"
+widget: "list"
+required: false
+condition:
+when: "type"
+is: "bullets"

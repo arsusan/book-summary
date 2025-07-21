@@ -1,8 +1,9 @@
 backend:
-  name: git-gateway
+  name: oauth
+  base_url: https://susanaryal.com.np
+  auth_endpoint: api/auth
   repo: arsusan/book-summary
   branch: main
-  base_url: https://ar-books.netlify.app/
 
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
@@ -48,14 +49,14 @@ collections:
               - { label: "Bullet Points", value: "bullets" }
             default: "paragraph"
           - label: "Paragraph Summary"
-            name: "paragraph_content" # 🟢 changed from "content"
+            name: "paragraph_content"
             widget: "markdown"
             required: false
             condition:
               when: "type"
               is: "paragraph"
           - label: "Bullet Points"
-            name: "bullet_points" # 🟢 changed from "content"
+            name: "bullet_points"
             widget: "list"
             required: false
             condition:
