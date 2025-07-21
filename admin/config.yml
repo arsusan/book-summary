@@ -1,30 +1,75 @@
 backend:
-  name: git-gateway
-  branch: main
+  name: github
+  repo: arsusan/book-summary # Update with your GitHub repo
+  branch: main # Your default branch
+  base_url: https://ar-books.netlify.app/ # Your site URL
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "assets/uploads" # Where uploaded images will be stored
+public_folder: "/assets/uploads" # Public path for images
 
 collections:
   - name: "books"
     label: "Books"
-    folder: "content/books"
-    create: true
-    slug: "{{slug}}"
+    description: "Manage book summaries"
+    folder: "" # Store in root directory
+    create: false # Only edit existing files
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Author", name: "author", widget: "string" }
-      - { label: "Description", name: "description", widget: "text" }
-      - {
-          label: "Category",
-          name: "category",
-          widget: "select",
-          options: ["business", "psychology", "self-help", "productivity"],
-        }
-      - { label: "Cover Image", name: "cover", widget: "image" }
-      - label: "Chapters"
-        name: "chapters"
+      - { name: path, label: Path, widget: hidden, default: "data.json" }
+      - name: "books"
+        label: "Book List"
         widget: "list"
         fields:
+          - { label: "ID", name: "id", widget: "number", value_type: "int" }
           - { label: "Title", name: "title", widget: "string" }
-          - { label: "Summary", name: "summary", widget: "markdown" }
+          - { label: "Author", name: "author", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - {
+              label: "Category",
+              name: "category",
+              widget: "select",
+              options:
+                [
+                  "business",
+                  "psychology",
+                  "self-help",
+                  "productivity",
+                  "other",
+                ],
+            }
+          - {
+              label: "Cover Image",
+              name: "cover",
+              widget: "image",
+              required: false,
+              media_folder: "assets/covers",
+              public_folder: "/assets/covers",
+            }
+          - label: "Chapters"
+            name: "chapters"
+            widget: "list"
+            fields:
+              - { label: "Chapter Title", name: "title", widget: "string" }
+              - label: "Summary Type"
+                name: "type"
+                widget: "select"
+                options:
+                  - { label: "Paragraph", value: "paragraph" }
+                  - { label: "Bullet Points", value: "bullets" }
+                default: "paragraph"
+              - label: "Paragraph Summary"
+                name: "content"
+                widget: "markdown"
+                required: false
+                buttons: ["bold", "italic", "link"]
+                editor_components: []
+                condition:
+                  when: "type"
+                  is: "paragraph"
+              - label: "Bullet Points"
+                name: "content"
+                widget: "list"
+                required: false
+                condition:
+                  when: "type"
+                  is: "bullets"

@@ -1,0 +1,28 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "description": "An easy & proven way to build good habits & break bad ones",
+      "category": "self-help",
+      "cover": "/assets/covers/atomic-habits.jpg",
+      "chapters": [
+        {
+          "title": "The Surprising Power of Atomic Habits",
+          "type": "bullets",
+          "content": [
+            "Habits are the compound interest of self-improvement",
+            "Small changes seem insignificant but deliver remarkable results",
+            "Focus on systems rather than goals"
+          ]
+        },
+        {
+          "title": "How Your Habits Shape Your Identity",
+          "type": "paragraph",
+          "content": "True behavior change is identity change. Every action is a vote for the type of person you wish to become."
+        }
+      ]
+    }
+  ]
+}
