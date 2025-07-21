@@ -1,9 +1,8 @@
 backend:
   name: git-gateway
   branch: main
-  site_domain: https://susanaryal.com.np/
 
-media_folder: "assets/uploads"
+media_folder: "public/assets/uploads" # Changed to public/
 public_folder: "/assets/uploads"
 
 collections:
@@ -18,19 +17,24 @@ collections:
             label: "Books"
             widget: "list"
             fields:
-              # Your existing field definitions go here
-              - { label: "ID", name: "id", widget: "number", value_type: "int" }
+              - {
+                  label: "ID",
+                  name: "id",
+                  widget: "number",
+                  value_type: "int",
+                  hint: "Unique number for each book",
+                }
               - {
                   label: "Title",
                   name: "title",
                   widget: "string",
-                  pattern: ["^.{3,}$", "Minimum 3 characters"],
+                  pattern: ["^.{3,}$", "Minimum 3 characters required"],
                 }
               - { label: "Author", name: "author", widget: "string" }
               - {
                   label: "Description",
                   name: "description",
-                  widget: "text",
+                  widget: "textarea",
                   min: 20,
                 }
               - {
@@ -51,9 +55,10 @@ collections:
                   label: "Cover Image",
                   name: "cover",
                   widget: "image",
-                  media_folder: "assets/covers",
+                  media_folder: "public/assets/covers", # Added public/
                   public_folder: "/assets/covers",
                   choose_url: false,
+                  required: false,
                 }
               - label: "Additional Details"
                 name: "details"
@@ -66,12 +71,14 @@ collections:
                       widget: "number",
                       min: 1900,
                       max: 2100,
+                      required: false,
                     }
                   - {
                       label: "Page Count",
                       name: "pages",
                       widget: "number",
                       min: 1,
+                      required: false,
                     }
                   - {
                       label: "Rating",
@@ -80,6 +87,7 @@ collections:
                       min: 0,
                       max: 5,
                       step: 0.1,
+                      required: false,
                     }
               - label: "Chapters"
                 name: "chapters"
@@ -103,7 +111,7 @@ collections:
                       name: "content",
                       widget: "markdown",
                       buttons: ["bold", "italic", "link"],
-                      editor_components: ["image"],
+                      editor_components: [],
                       required: true,
                     }
                   - {
