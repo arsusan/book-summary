@@ -1,8 +1,5 @@
 backend:
-  name: oauth
-  base_url: https://susanaryal.com.np
-  auth_endpoint: api/auth
-  repo: arsusan/book-summary
+  name: git-gateway
   branch: main
 
 media_folder: "assets/uploads"
@@ -12,7 +9,7 @@ collections:
   - name: "books"
     label: "Books"
     folder: "content/books"
-    create: false
+    create: true
     slug: "{{slug}}"
     format: "json"
     extension: "json"
@@ -53,12 +50,12 @@ collections:
             widget: "markdown"
             required: false
             condition:
-              when: "type"
-              is: "paragraph"
+              field: "type"
+              equals: "paragraph"
           - label: "Bullet Points"
             name: "bullet_points"
             widget: "list"
             required: false
             condition:
-              when: "type"
-              is: "bullets"
+              field: "type"
+              equals: "bullets"
