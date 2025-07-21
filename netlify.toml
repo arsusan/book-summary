@@ -8,9 +8,3 @@
   status = 200
   force = true
 
-[[headers]]
-  for = "/admin/*"
-  [headers.values]
-    Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;"
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
