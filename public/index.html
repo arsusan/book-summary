@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Summaries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css"
+        media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css"
+        media="(prefers-color-scheme: light)" />
+
+    <style>
+        .markdown-body {
+            background-color: transparent;
+            font-size: inherit;
+        }
+
+        .prose {
+            max-width: 100%;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e293b',
+                        accent: '#f97316',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-primary dark:text-primary flex items-center">
+                <i class="fas fa-book-open mr-2"></i> BookSummaries
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search books..."
+                        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400 dark:text-gray-300"></i>
+                </div>
+                <button id="themeToggle"
+                    class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Homepage -->
+        <section id="homePage" class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-secondary dark:text-white mb-4">Discover Book Summaries</h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore key insights from
+                        popular books.</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <h2 class="text-2xl font-bold text-secondary dark:text-white">All Books</h2>
+                    <div class="flex items-center gap-4">
+                        <select id="filterSelect"
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="all">All Categories</option>
+                            <option value="business">Business</option>
+                            <option value="psychology">Psychology</option>
+                            <option value="self-help">Self-Help</option>
+                            <option value="productivity">Productivity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="loadingIndicator" class="hidden flex justify-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                </div>
+
+                <div id="bookList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Books loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Detail Page -->
+        <section id="bookDetailPage" class="py-12 hidden">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <button id="backButton" class="mb-6 flex items-center text-primary hover:text-primary-dark font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to All Books
+                </button>
+
+                <div id="bookDetail" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+                    <!-- Book details loaded dynamically -->
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-secondary dark:text-white mb-6">Book Chapters</h2>
+                    <div id="chaptersList">
+                        <!-- Chapters loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary dark:bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">BookSummaries &copy; <span id="currentYear"></span></p>
+        </div>
+    </footer>
+
+    <!-- Netlify Identity -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="/js/app.js" type="module"></script>
+</body>
+
+</html>

@@ -8,54 +8,107 @@ public_folder: "/assets/uploads"
 collections:
   - name: "books"
     label: "Books"
-    folder: "content/books"
-    create: true
-    slug: "{{slug}}"
-    format: "json"
-    extension: "json"
-    fields:
-      - { label: "ID", name: "id", widget: "number" }
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Author", name: "author", widget: "string" }
-      - { label: "Description", name: "description", widget: "text" }
-      - {
-          label: "Category",
-          name: "category",
-          widget: "select",
-          options:
-            ["business", "psychology", "self-help", "productivity", "other"],
-        }
-      - {
-          label: "Cover Image",
-          name: "cover",
-          widget: "image",
-          required: false,
-          media_folder: "assets/covers",
-          public_folder: "/assets/covers",
-        }
-      - label: "Chapters"
-        name: "chapters"
-        widget: "list"
+    files:
+      - name: "data"
+        label: "Books Data"
+        file: "content/books/data.json"
         fields:
-          - { label: "Chapter Title", name: "title", widget: "string" }
-          - label: "Summary Type"
-            name: "type"
-            widget: "select"
-            options:
-              - { label: "Paragraph", value: "paragraph" }
-              - { label: "Bullet Points", value: "bullets" }
-            default: "paragraph"
-          - label: "Paragraph Summary"
-            name: "paragraph_content"
-            widget: "markdown"
-            required: false
-            condition:
-              field: "type"
-              equals: "paragraph"
-          - label: "Bullet Points"
-            name: "bullet_points"
+          - name: "books"
+            label: "Books"
             widget: "list"
-            required: false
-            condition:
-              field: "type"
-              equals: "bullets"
+            fields:
+              # Your existing field definitions go here
+              - { label: "ID", name: "id", widget: "number", value_type: "int" }
+              - {
+                  label: "Title",
+                  name: "title",
+                  widget: "string",
+                  pattern: ["^.{3,}$", "Minimum 3 characters"],
+                }
+              - { label: "Author", name: "author", widget: "string" }
+              - {
+                  label: "Description",
+                  name: "description",
+                  widget: "text",
+                  min: 20,
+                }
+              - {
+                  label: "Category",
+                  name: "category",
+                  widget: "select",
+                  options:
+                    [
+                      "business",
+                      "psychology",
+                      "self-help",
+                      "productivity",
+                      "other",
+                    ],
+                  default: "other",
+                }
+              - {
+                  label: "Cover Image",
+                  name: "cover",
+                  widget: "image",
+                  media_folder: "assets/covers",
+                  public_folder: "/assets/covers",
+                  choose_url: false,
+                }
+              - label: "Additional Details"
+                name: "details"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - {
+                      label: "Publication Year",
+                      name: "year",
+                      widget: "number",
+                      min: 1900,
+                      max: 2100,
+                    }
+                  - {
+                      label: "Page Count",
+                      name: "pages",
+                      widget: "number",
+                      min: 1,
+                    }
+                  - {
+                      label: "Rating",
+                      name: "rating",
+                      widget: "number",
+                      min: 0,
+                      max: 5,
+                      step: 0.1,
+                    }
+              - label: "Chapters"
+                name: "chapters"
+                widget: "list"
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - {
+                      label: "Type",
+                      name: "type",
+                      widget: "select",
+                      options:
+                        [
+                          { label: "Paragraph", value: "paragraph" },
+                          { label: "Bullet Points", value: "bullets" },
+                        ],
+                      default: "paragraph",
+                    }
+                  - {
+                      label: "Content",
+                      name: "content",
+                      widget: "markdown",
+                      buttons: ["bold", "italic", "link"],
+                      editor_components: ["image"],
+                      required: true,
+                    }
+                  - {
+                      label: "Key Quote",
+                      name: "key_quote",
+                      widget: "string",
+                      required: false,
+                      hint: "Optional notable quote from this chapter",
+                    }
