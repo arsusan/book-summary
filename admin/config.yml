@@ -10,9 +10,9 @@ public_folder: "/assets/uploads"
 collections:
   - name: "books"
     label: "Books"
-    folder: "content/books" # Fix this!
+    folder: "content/books"
     create: false
-    slug: "data" # or anything if you allow multiple summaries
+    slug: "data"
     format: "json"
     extension: "json"
     fields:
@@ -48,14 +48,14 @@ collections:
               - { label: "Bullet Points", value: "bullets" }
             default: "paragraph"
           - label: "Paragraph Summary"
-            name: "content"
+            name: "paragraph_content" # 🟢 changed from "content"
             widget: "markdown"
             required: false
             condition:
               when: "type"
               is: "paragraph"
           - label: "Bullet Points"
-            name: "content"
+            name: "bullet_points" # 🟢 changed from "content"
             widget: "list"
             required: false
             condition:
