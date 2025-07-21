@@ -37,7 +37,6 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
@@ -126,15 +125,15 @@
     </footer>
 
     <!-- Netlify Identity -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="js/app.js" type="module"></script>
+    <script>
         if (window.location.pathname === '/admin/') {
             window.location.href = '/admin/index.html';
         }
     </script>
-
-    <!-- Main JavaScript -->
-    <script src="/public/js/app.js" type="module"></script>
-
 </body>
 
 </html>
