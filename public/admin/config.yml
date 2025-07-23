@@ -20,107 +20,87 @@ collections:
             label: "Books"
             widget: "list"
             fields:
-              - {
-                  label: "ID",
-                  name: "id",
-                  widget: "number",
-                  value_type: "int",
-                  hint: "Unique number for each book",
-                }
-              - {
-                  label: "Title",
-                  name: "title",
-                  widget: "string",
-                  pattern: ["^.{3,}$", "Minimum 3 characters required"],
-                }
-              - { label: "Author", name: "author", widget: "string" }
-              - {
-                  label: "Description",
-                  name: "description",
-                  widget: "textarea",
-                  min: 20,
-                }
-              - {
-                  label: "Category",
-                  name: "category",
-                  widget: "select",
-                  options:
-                    [
-                      "business",
-                      "psychology",
-                      "self-help",
-                      "productivity",
-                      "other",
-                    ],
-                  default: "other",
-                }
-              - {
-                  label: "Cover Image",
-                  name: "cover",
-                  widget: "image",
-                  media_folder: "public/assets/covers",
-                  public_folder: "/assets/covers",
-                  choose_url: false,
-                  required: false,
-                }
+              - label: "ID"
+                name: "id"
+                widget: "number"
+                value_type: "int"
+                hint: "Unique number for each book"
+              - label: "Title"
+                name: "title"
+                widget: "string"
+                pattern: ["^.{3,}$", "Minimum 3 characters required"]
+              - label: "Author"
+                name: "author"
+                widget: "string"
+              - label: "Description"
+                name: "description"
+                widget: "textarea"
+                min: 20
+              - label: "Category"
+                name: "category"
+                widget: "select"
+                options:
+                  - business
+                  - psychology
+                  - self-help
+                  - productivity
+                  - other
+                default: "other"
+              - label: "Cover Image"
+                name: "cover"
+                widget: "image"
+                media_folder: "public/assets/covers"
+                public_folder: "/assets/covers"
+                choose_url: false
+                required: false
               - label: "Additional Details"
                 name: "details"
                 widget: "object"
                 collapsed: true
                 fields:
-                  - {
-                      label: "Publication Year",
-                      name: "year",
-                      widget: "number",
-                      min: 1900,
-                      max: 2100,
-                      required: false,
-                    }
-                  - {
-                      label: "Page Count",
-                      name: "pages",
-                      widget: "number",
-                      min: 1,
-                      required: false,
-                    }
-                  - {
-                      label: "Rating",
-                      name: "rating",
-                      widget: "number",
-                      min: 0,
-                      max: 5,
-                      step: 0.1,
-                      required: false,
-                    }
+                  - label: "Publication Year"
+                    name: "year"
+                    widget: "number"
+                    min: 1900
+                    max: 2100
+                    required: false
+                  - label: "Page Count"
+                    name: "pages"
+                    widget: "number"
+                    min: 1
+                    required: false
+                  - label: "Rating"
+                    name: "rating"
+                    widget: "number"
+                    min: 0
+                    max: 5
+                    step: 0.1
+                    required: false
               - label: "Chapters"
                 name: "chapters"
                 widget: "list"
                 summary: "{{fields.title}}"
                 fields:
-                  - { label: "Title", name: "title", widget: "string" }
-                  - {
-                      label: "Type",
-                      name: "type",
-                      widget: "select",
-                      options:
-                        [
-                          { label: "Paragraph", value: "paragraph" },
-                          { label: "Bullet Points", value: "bullets" },
-                        ],
-                      default: "paragraph",
-                    }
-                  - {
-                      label: "Content",
-                      name: "content",
-                      widget: "markdown",
-                      buttons: ["bold", "italic", "link"],
-                      editor_components: [],
-                      required: true,
-                    }
-                  - {
-                      label: "Key Quote",
-                      name: "key_quote",
-                      widget: "string",
-                      required: false,
-                      hint: "Optional notable quote from this chapter",
-                    }
+                  - label: "Title"
+                    name: "title"
+                    widget: "string"
+                  - label: "Type"
+                    name: "type"
+                    widget: "select"
+                    options:
+                      - label: "Paragraph"
+                        value: "paragraph"
+                      - label: "Bullet Points"
+                        value: "bullets"
+                    default: "paragraph"
+                  - label: "Content"
+                    name: "content"
+                    widget: "markdown"
+                    buttons: ["bold", "italic", "link"]
+                    editor_components: []
+                    required: true
+                  - label: "Key Quote"
+                    name: "key_quote"
+                    widget: "string"
+                    required: false
+                    hint: "Optional notable quote from this chapter"
