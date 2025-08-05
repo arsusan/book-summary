@@ -4,135 +4,1026 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Summaries</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css"
-        media="(prefers-color-scheme: dark)" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css"
-        media="(prefers-color-scheme: light)" />
-
+    <title>Susan Aryal - Data Analyst Portfolio</title>
+    <!-- Three.js library for 3D rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP library for animations -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.7.1/dist/gsap.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .markdown-body {
-            background-color: transparent;
-            font-size: inherit;
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            /* Changed font to Inter */
         }
 
-        .prose {
-            max-width: 100%;
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-blue: #0a6cff;
+            --secondary-blue: #00c6fb;
+            --dark-blue: #0a192f;
+            --light-blue: #e6f7ff;
+            --accent-blue: #64ffda;
+            --white: #ffffff;
+            --gray: #8892b0;
+            --card-bg: rgba(17, 34, 64, 0.5);
+            --header-bg: rgba(10, 25, 47, 0.85);
+            --footer-bg: rgba(10, 25, 47, 0.9);
+            --header-height: 5rem;
+            /* Define a variable for header height */
         }
-    </style>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#1e293b',
-                        accent: '#f97316',
-                    }
-                }
+
+        body {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Canvas container for Three.js background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* Send to background */
+        }
+
+        /* Overlay for content above the 3D background */
+        .overlay {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            /* Frosted glass effect */
+            background: var(--header-bg);
+            border-bottom-left-radius: 10px;
+            /* Rounded corners for header */
+            border-bottom-right-radius: 10px;
+            height: var(--header-height);
+            /* Set header height */
+        }
+
+        .header.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-radius: 5px;
+            /* Rounded logo */
+        }
+
+        .logo span {
+            color: var(--white);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+            /* Add padding for better hover area */
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            /* Rounded button */
+            padding: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            padding-top: var(--header-height);
+            /* Push content down by header height */
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            /* Center content on smaller screens */
+            justify-content: center;
+            /* Center content horizontally */
+        }
+
+        .hero-content {
+            max-width: 800px;
+            /* Increased max-width for quote */
+            z-index: 20;
+            text-align: center;
+            /* Center quote text */
+            opacity: 1;
+            /* Changed to 1 for default visibility */
+            transform: translateY(0);
+            /* Changed to 0 for default visibility */
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            /* Larger font for quote */
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--white);
+        }
+
+        .hero-content h1 span {
+            color: var(--accent-blue);
+            display: inline;
+            /* Keep span on same line for quote */
+        }
+
+        .hero-content p.quote-author {
+            /* New class for author */
+            font-size: 1.3rem;
+            /* Larger font for author */
+            color: var(--gray);
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+            font-style: italic;
+            /* Italicize author */
+            margin-left: auto;
+            /* Center author text */
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            border-radius: 8px;
+            /* More rounded buttons */
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(10, 108, 255, 0.3);
+            margin-right: 1rem;
+            /* Spacing between buttons */
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(10, 108, 255, 0.4);
+        }
+
+        /* Sections */
+        .section {
+            padding: 6rem 10%;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            /* Slightly larger title */
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            display: block;
+            /* Ensure it takes full width for centering */
+            color: var(--white);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            /* Wider underline */
+            height: 4px;
+            /* Thicker underline */
+            background: var(--accent-blue);
+            border-radius: 2px;
+            /* Rounded underline */
+        }
+
+        /* About Section */
+        .about-content {
+            display: flex;
+            gap: 4rem;
+            align-items: center;
+            flex-wrap: wrap;
+            /* Allow wrapping on smaller screens */
+            justify-content: center;
+            /* Center items when wrapped */
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            /* Ensure text block doesn't get too small */
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .about-text p {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            /* Responsive grid */
+            gap: 1.5rem;
+            /* Increased gap */
+            margin-top: 2rem;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            /* Use card background for skill items */
+            padding: 1rem;
+            border-radius: 8px;
+            /* Rounded skill items */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-icon {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            /* Larger icons */
+        }
+
+        .skill-text h4 {
+            color: var(--white);
+            font-size: 1.1rem;
+        }
+
+        .skill-text p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            /* Remove bottom margin for skill text p */
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+            /* Increased gap */
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-img {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+            border-bottom: 3px solid var(--accent-blue);
+            /* Add a border */
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-info h3 {
+            font-size: 1.5rem;
+            /* Slightly larger project title */
+            margin-bottom: 0.7rem;
+            color: var(--white);
+        }
+
+        .project-info p {
+            color: var(--gray);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            /* Increased tag gap */
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: rgba(100, 255, 218, 0.15);
+            /* Slightly darker tag background */
+            color: var(--accent-blue);
+            padding: 0.4rem 0.9rem;
+            /* Larger padding for tags */
+            border-radius: 25px;
+            /* More rounded tags */
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            padding: 3rem 10%;
+            text-align: center;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+            border-top-left-radius: 10px;
+            /* Rounded corners for footer */
+            border-top-right-radius: 10px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            /* Slightly larger social icons */
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--accent-blue);
+            font-size: 1.3rem;
+            /* Larger social icons */
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            /* Pop effect on hover */
+            background: var(--accent-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* 3D Icon Container */
+        .icon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* Allow clicks to pass through */
+            z-index: 5;
+        }
+
+        .floating-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            pointer-events: auto;
+            /* Allow interaction with icons */
+            cursor: pointer;
+            border-radius: 50%;
+            /* Make icons perfectly round */
+            background: rgba(10, 25, 47, 0.3);
+            /* Subtle background for icons */
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+
+        .floating-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            /* Scale on hover */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero {
+                padding-top: var(--header-height);
+                /* Maintain padding on smaller screens */
+                text-align: center;
+            }
+
+            .hero-content {
+                text-align: center;
+                /* Center content within hero section */
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
             }
         }
-    </script>
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: var(--header-height);
+                /* Position mobile menu below header */
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                border-radius: 0 0 10px 10px;
+                /* Rounded bottom for mobile menu */
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+                /* Center buttons */
+            }
+
+            .btn {
+                margin-right: 0;
+                /* Remove right margin for stacked buttons */
+                width: 80%;
+                /* Make buttons wider on mobile */
+                max-width: 300px;
+            }
+
+            .section {
+                padding: 4rem 5%;
+                /* Adjust padding for smaller screens */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section {
+                padding: 3rem 1.5rem;
+                /* Even more padding adjustment */
+            }
+
+            .skills-container {
+                grid-template-columns: 1fr;
+                /* Single column for skills */
+            }
+
+            .hero {
+                padding: 0 1.5rem;
+                padding-top: var(--header-height);
+                /* Ensure padding top is maintained */
+            }
+
+            .section-title {
+                font-size: 2rem;
+                /* Smaller title on very small screens */
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
-    <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-primary dark:text-primary flex items-center">
-                <i class="fas fa-book-open mr-2"></i> BookSummaries
-            </a>
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Search books..."
-                        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
-                    <i class="fas fa-search absolute right-3 top-3 text-gray-400 dark:text-gray-300"></i>
-                </div>
-                <button id="themeToggle"
-                    class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600">
-                    <i class="fas fa-moon dark:hidden"></i>
-                    <i class="fas fa-sun hidden dark:block"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+<body>
+    <!-- 3D Canvas Container - This will host the Three.js rendered background -->
+    <div id="canvas-container"></div>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Homepage -->
-        <section id="homePage" class="py-12">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h1 class="text-4xl font-bold text-secondary dark:text-white mb-4">Discover Book Summaries</h1>
-                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore key insights from
-                        popular books.</p>
-                </div>
+    <!-- Floating Icons - These are interactive 2D icons floating on top of the 3D scene -->
+    <div class="icon-container" id="icon-container"></div>
 
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <h2 class="text-2xl font-bold text-secondary dark:text-white">All Books</h2>
-                    <div class="flex items-center gap-4">
-                        <select id="filterSelect"
-                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
-                            <option value="all">All Categories</option>
-                            <option value="business">Business</option>
-                            <option value="psychology">Psychology</option>
-                            <option value="self-help">Self-Help</option>
-                            <option value="productivity">Productivity</option>
-                        </select>
-                    </div>
-                </div>
+    <!-- Overlay Content - All main content sits here, above the 3D background -->
+    <div class="overlay">
+        <!-- Header Section -->
+        <header class="header" id="header">
+            <a href="#" class="logo">Susan<span>Aryal</span></a>
+            <nav class="nav-links" id="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Projects</a>
+            </nav>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle mobile menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
 
-                <div id="loadingIndicator" class="hidden flex justify-center py-12">
-                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                </div>
-
-                <div id="bookList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Books loaded dynamically -->
+        <!-- Hero Section - Introduction to the portfolio -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>"The <span>only way</span> to do great work is to love what you do."</h1>
+                <p class="quote-author">- Steve Jobs</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn">View Projects</a>
                 </div>
             </div>
         </section>
 
-        <!-- Book Detail Page -->
-        <section id="bookDetailPage" class="py-12 hidden">
-            <div class="container mx-auto px-4 max-w-4xl">
-                <button id="backButton" class="mb-6 flex items-center text-primary hover:text-primary-dark font-medium">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to All Books
-                </button>
+        <!-- About Section - Details about the developer and skills -->
+        <section class="section" id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Data Specialist & Machine Learning Enthusiast</h3>
+                    <p>With experience in data analysis, interpretation, and ML model training, I specialize in ensuring
+                        data accuracy, confidentiality, and operational efficiency. My passion lies in solving
+                        real-world problems with data and helping teams make smarter decisions.</p>
+                    <p>My expertise includes Python, SQL, and various data visualization tools, alongside practical
+                        experience in developing AI chatbots and NLP models.</p>
 
-                <div id="bookDetail" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-                    <!-- Book details loaded dynamically -->
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-secondary dark:text-white mb-6">Book Chapters</h2>
-                    <div id="chaptersList">
-                        <!-- Chapters loaded dynamically -->
+                    <h3 style="margin-top: 2rem;">My Skills</h3>
+                    <div class="skills-container">
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fab fa-python"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>Python</h4>
+                                <p>Pandas, BeautifulSoup, Selenium, Flask</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>SQL</h4>
+                                <p>Complex Queries, HR Analytics</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>Data Visualization</h4>
+                                <p>Power BI, Tableau, Excel, Matplotlib</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>Machine Learning & NLP</h4>
+                                <p>scikit-learn, TensorFlow, PyTorch, Hugging Face</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>Cloud & APIs</h4>
+                                <p>OpenAI API, Data Collection</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="skill-text">
+                                <h4>Data Engineering</h4>
+                                <p>Cleaning, Structuring, ETL Concepts</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-secondary dark:bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-2">BookSummaries &copy; <span id="currentYear"></span></p>
-        </div>
-    </footer>
+        <!-- Projects Section - Showcasing key projects -->
+        <section class="section" id="projects">
+            <h2 class="section-title">My Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-code-branch"></i> <!-- Icon for Data Collection & Cleaning -->
+                    </div>
+                    <div class="project-info">
+                        <h3>Data Collection & Cleaning Automation</h3>
+                        <p>Developed Python-based solutions utilizing Pandas, BeautifulSoup, and Selenium to scrape,
+                            clean, and process large datasets from diverse websites and APIs.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Pandas</span>
+                            <span class="tag">BeautifulSoup</span>
+                            <span class="tag">Selenium</span>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Netlify Identity -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-chart-line"></i>
+                        <!-- Icon for Analytics, Visualization & Customer Segmentation -->
+                    </div>
+                    <div class="project-info">
+                        <h3>Analytics, Visualization & Customer Segmentation</h3>
+                        <p>Designed and built interactive dashboards using Power BI, Excel, and Tableau to visualize
+                            KPIs. Applied scikit-learn for customer segmentation and utilized Matplotlib for advanced
+                            data storytelling.</p>
+                        <div class="project-tags">
+                            <span class="tag">Power BI</span>
+                            <span class="tag">Excel</span>
+                            <span class="tag">Tableau</span>
+                            <span class="tag">scikit-learn</span>
+                            <span class="tag">Matplotlib</span>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Main JavaScript -->
-    <script src="js/app.js" type="module"></script>
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-comments"></i> <!-- Icon for AI Chatbots & NLP Projects -->
+                    </div>
+                    <div class="project-info">
+                        <h3>AI Chatbots & NLP Model Development</h3>
+                        <p>Engineered AI chatbots and contributed to Natural Language Processing (NLP) model training
+                            initiatives, leveraging Python with Flask, OpenAI API, Hugging Face, TensorFlow, and
+                            PyTorch.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Flask</span>
+                            <span class="tag">OpenAI API</span>
+                            <span class="tag">Hugging Face</span>
+                            <span class="tag">TensorFlow</span>
+                            <span class="tag">PyTorch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Project Card: Resume Classifier and Job Recommendation -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-file-alt"></i> <!-- Icon for Resume Classifier -->
+                    </div>
+                    <div class="project-info">
+                        <h3>Resume Classifier & Job Recommendation</h3>
+                        <p>Developed an intelligent system to classify resumes based on skills and experience, and
+                            recommend suitable job opportunities using machine learning algorithms.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Machine Learning</span>
+                            <span class="tag">NLP</span>
+                            <span class="tag">Classification</span>
+                            <span class="tag">Recommendation Systems</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="social-links">
+                <a href="https://github.com/your-github-profile" class="social-link" aria-label="GitHub"><i
+                        class="fab fa-github"></i></a>
+                <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link" aria-label="Dribbble"><i class="fab fa-dribbble"></i></a>
+            </div>
+            <p class="copyright">© 2024 Susan Aryal. All rights reserved.</p>
+        </footer>
+    </div>
+
     <script>
-        if (window.location.pathname === '/admin/') {
-            window.location.href = '/admin/index.html';
+        // Three.js variables
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        // Data for floating icons
+        const icons = [
+            { icon: 'fa-chart-pie', color: '#64ffda' }, /* Data visualization */
+            { icon: 'fa-code', color: '#0a6cff' }, /* Programming */
+            { icon: 'fa-brain', color: '#00c6fb' }, /* AI/ML */
+            { icon: 'fa-database', color: '#64ffda' }, /* Databases */
+            { icon: 'fa-robot', color: '#0a6cff' }, /* Robotics/Automation */
+            { icon: 'fa-cloud', color: '#00c6fb' }, /* Cloud computing */
+            { icon: 'fa-lightbulb', color: '#64ffda' }, /* Insights */
+            { icon: 'fa-filter', color: '#0a6cff' } /* Data Cleaning */
+        ];
+
+        /**
+         * Initializes the Three.js scene, camera, renderer, and adds particles and floating icons.
+         */
+        function init() {
+            // Create a new Three.js scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a192f); // Dark blue background
+            scene.fog = new THREE.Fog(0x0a192f, 20, 100); // Fog effect for depth
+
+            // Create a perspective camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30; // Initial camera position
+
+            // Create a WebGL renderer with antialiasing and transparency
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight); // Set renderer size to window size
+            renderer.setPixelRatio(window.devicePixelRatio); // Adjust for high-DPI screens
+            document.getElementById('canvas-container').appendChild(renderer.domElement); // Add renderer to DOM
+
+            // Add ambient light to the scene
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            // Add a directional light for better illumination
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 15); // Position the light source
+            scene.add(directionalLight);
+
+            // Create and add particles to the scene
+            createParticles();
+
+            // Create and add floating 2D icons to the DOM
+            createFloatingIcons();
+
+            // Set up event listeners for window resize and mouse movement
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            // Set up navigation functionality (mobile menu, smooth scrolling)
+            setupNavigation();
+
+            // Animate hero content on page load
+            gsap.from(".hero-content", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                delay: 0.5,
+                ease: "power3.out"
+            });
+
+            // Start the animation loop
+            animate();
         }
+
+        /**
+         * Creates a field of random particles in the 3D scene.
+         */
+        function createParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const colors = [];
+
+            // Generate 1000 particles with random positions and blue color variations
+            for (let i = 0; i < 1000; i++) {
+                const x = (Math.random() - 0.5) * 200;
+                const y = (Math.random() - 0.5) * 200;
+                const z = (Math.random() - 0.5) * 200;
+
+                vertices.push(x, y, z);
+
+                // Random blueish color for each particle
+                const r = Math.random() * 0.2 + 0.1;
+                const g = Math.random() * 0.4 + 0.4;
+                const b = Math.random() * 0.6 + 0.4;
+                colors.push(r, g, b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            // Material for the particles
+            const material = new THREE.PointsMaterial({
+                size: 1.5, // Size of each particle
+                vertexColors: true, // Use vertex colors
+                transparent: true,
+                opacity: 0.7
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles); // Add particles to the scene
+        }
+
+        /**
+         * Creates and animates floating 2D icons in the DOM.
+         */
+        function createFloatingIcons() {
+            const container = document.getElementById('icon-container');
+
+            icons.forEach((iconData) => {
+                const icon = document.createElement('div');
+                icon.className = 'floating-icon';
+                icon.innerHTML = `<i class="fas ${iconData.icon}"></i>`;
+                icon.style.color = iconData.color;
+                icon.style.left = `${Math.random() * 100}%`; // Random horizontal position
+                icon.style.top = `${Math.random() * 100}%`; // Random vertical position
+
+                // GSAP animation for floating effect
+                gsap.to(icon, {
+                    y: '+=20', // Move up and down by 20px
+                    duration: 2 + Math.random() * 3, // Random duration for varied movement
+                    yoyo: true, // Go back and forth
+                    repeat: -1, // Infinite repeat
+                    ease: 'sine.inOut' // Smooth easing
+                });
+
+                // Add click interaction to icons
+                icon.addEventListener('click', () => {
+                    gsap.to(icon, {
+                        scale: 1.5, // Scale up on click
+                        duration: 0.3,
+                        yoyo: true,
+                        repeat: 1 // Scale back down
+                    });
+                });
+
+                container.appendChild(icon);
+            });
+        }
+
+        /**
+         * Sets up mobile menu toggle and smooth scrolling for navigation links.
+         */
+        function setupNavigation() {
+            // Mobile menu toggle functionality
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const navLinks = document.getElementById('nav-links');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active'); // Toggle 'active' class for visibility
+            });
+
+            // Header scroll effect: change style when scrolled down
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Smooth scrolling for all anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default jump behavior
+
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80, // Offset for fixed header
+                            behavior: 'smooth' // Smooth scroll animation
+                        });
+
+                        // Close mobile menu if it's open after clicking a link
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        /**
+         * Handles window resizing to update camera aspect ratio and renderer size.
+         */
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+
+            camera.aspect = window.innerWidth / window.innerHeight; // Update camera aspect
+            camera.updateProjectionMatrix(); // Recalculate projection matrix
+            renderer.setSize(window.innerWidth, window.innerHeight); // Update renderer size
+        }
+
+        /**
+         * Updates mouseX and mouseY based on mouse movement for camera control.
+         * @param {MouseEvent} event - The mouse move event.
+         */
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.05; // Calculate mouse X position relative to center
+            mouseY = (event.clientY - windowHalfY) * 0.05; // Calculate mouse Y position relative to center
+        }
+
+        /**
+         * The main animation loop for Three.js.
+         */
+        function animate() {
+            requestAnimationFrame(animate); // Request next frame for continuous animation
+
+            // Rotate particles for a dynamic background effect
+            particles.rotation.x += 0.001;
+            particles.rotation.y += 0.002;
+
+            // Move camera slightly based on mouse position for a parallax effect
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position); // Always look at the center of the scene
+
+            renderer.render(scene, camera); // Render the scene
+        }
+
+        // Initialize the Three.js scene and other elements when the page finishes loading
+        window.onload = init;
     </script>
 </body>
 
